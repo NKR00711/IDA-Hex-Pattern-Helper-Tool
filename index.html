@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDA Hex Pattern Helper Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        #output {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Hex Pattern Comparator &amp; Formatter</h2>
+    <p>Enter hex patterns:</p>
+    <div id="patternInputs">
+        <textarea class="pattern" placeholder="Enter hex pattern"></textarea>
+    </div>
+    <button onclick="addPatternInput()">Add Pattern Input</button>
+    <button onclick="comparePatterns()">Generate Patterns</button>
+    <h3>Resulting Pattern:</h3>
+    <textarea id="output" readonly></textarea>
+
+    <script>
+        function addPatternInput() {
+            const patternInputs = document.getElementById('patternInputs');
+            const textarea = document.createElement('textarea');
+            textarea.className = 'pattern';
+            textarea.placeholder = 'Enter hex pattern';
+            patternInputs.appendChild(textarea);
+        }
+
+        function comparePatterns() {
+            const patternTextareas = document.querySelectorAll('.pattern');
+            const patterns = Array.from(patternTextareas).map(textarea => textarea.value.replace(/\s+/g, ' ').trim().split(' '));
+
+            let outputPattern = '';
+
+            for (let i = 0; i < patterns[0].length; i++) {
+                const uniqueBytes = new Set(patterns.map(pattern => pattern[i]));
+
+                if (uniqueBytes.size === 1 && !uniqueBytes.has('?')) {
+                    outputPattern += patterns[0][i] + ' ';
+                } else {
+                    outputPattern += '? ';
+                }
+            }
+
+            document.getElementById('output').value = outputPattern.trim();
+        }
+    </script>
+</body>
+</html>
